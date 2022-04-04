@@ -4,6 +4,7 @@ import socket
 #ip=socket.getaddrinfo('baidu.com',8080) #该方法需要域名和端口两个参数
 ip=socket.gethostbyname('baidu.com')#根据域名获取服务器ip
 print(ip)
+
 判断网站是否使用了cdn技术
 
 （使用了cdn技术的话，ping的ip可能不是服务器的真实ip）
@@ -19,6 +20,7 @@ def pd_cdn(ym):
  else:
      print(f'{ym}没有使用cdn技术')
 pd_cdn('www.baidu.com')
+
 子域名收集
 
 通过字典添加域名前缀，然后调用系统命令去ping，能ping通则说明该域名存在
@@ -34,8 +36,8 @@ for ymqz in open(dic):
         print(jg+'\n')
     except Exception as e:
         pass
-端口扫描
 
+端口扫描
 whois信息查询
 
 import whois
