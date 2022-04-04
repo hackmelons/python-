@@ -38,7 +38,34 @@ for ymqz in open(dic):
         pass
 
 端口扫描
+def scan(ip, port):
+    server = telnetlib.Telnet()      # 创建一个Telnet对象
+    try:
+        title = "开放"
+        server.open(ip,port)         # 利用Telnet对象的open方法来创建TCP连接测试端口是否开放
+        a='{0}:{1}端口'.format(ip, port)
+        write([a,title])
+        print(a,title)
+    except Exception as e:
+         title = "关闭"
+         b = '{0}:{1}端口'.format(ip,port)
+         write([b, title])
+         print(b,title)
+    finally:
+         server.close()
+#portlist = [80,443]
+starttime = time.time()
+threads = []
+for port in portlist:
+    t = threading.Thread(target=scan,args=(ip,port))  #创建线程 args输入ip,port方法
+    t.start()
+    threads.append(t)
+for t in threads:
+    t.join()
+endtime = time.time()
+print('一共运行了{0}秒'.format((endtime-starttime))) 作者：安卓逆向安全 https://www.bilibili.com/read/cv6850535/ 出处：bilibili
+
 whois信息查询
 
 import whois
-q1=whois.whois('www.baidu.com')
+q1=whois.whois('xxxxx')[注意不要写入www]
