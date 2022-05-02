@@ -1,0 +1,15 @@
+#导包 导入twilio客户端
+from twilio.rest import Client
+
+#定义短信sid
+account_sid = 'xxxxxxxxxxxx'
+#定义秘钥
+auth_token = 'xxxxxxxxxxxx'
+
+#定义客户端对象  
+clinet = Client(account_sid,auth_token)
+
+#定义短信内容 第一个参数 发给谁 * 就是你自己的手机号  第一个参数 发信人 手机号为twilio里面自己注册的试用手机号   第一个参数 短信内容 
+message = clinet.messages.create(to='+86xxxxxxxx',from_='xxxxxxxx',body='小心啦！！！')
+#打印发送结果
+print(message)
