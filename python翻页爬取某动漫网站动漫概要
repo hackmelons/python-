@@ -1,0 +1,40 @@
+from bs4 import BeautifulSoup
+import requests
+def main(site):
+    url = "http://www.4399dmw.com{}".format(site)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0"#这里的因人而异，可以自行添加头文件内容
+    }
+    resp = requests.get(url = url,headers = headers)
+    html_doc =resp.content.decode('utf-8')
+    soup = BeautifulSoup(html_doc)
+    name = soup.find('div',class_= 'works__breadcrumbs').find('a',target='_self').get_text()
+    简介 = soup.find('div',class_= 'main').find('p',class_ = 'summary__content').get_text()
+    print(name, '\n', 简介, '\n')
+    pass
+
+def pachong(i):
+    url = "http://www.4399dmw.com/search/dh-1-0-0-0-0-{}-0/".format(i)
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0"
+    }
+    resp = requests.get(url=url, headers=headers)
+    html_doc = resp.content.decode('utf-8')
+    soup = BeautifulSoup(html_doc)
+    fanye = []
+    for x in soup.find_all('a',class_="u-card"):
+        site = x.get('href')
+        fanye.append(site)
+    for u in range(36):
+     main(fanye[u])
+    pass
+
+def pa(i):
+    for i in range(14):
+        print('melon已经为你爬到了第'+str(i)+'页，真的好累啊')
+        pachong(i)
+
+if __name__== '__main__':
+ pa('i')
+ with open ('动漫网站.txt','wb+',encoding='utf-8') as f:
+     f.write()
