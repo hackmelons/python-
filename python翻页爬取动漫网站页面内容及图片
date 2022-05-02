@@ -1,0 +1,40 @@
+#翻页爬取网站动漫名称和图片地址
+import requests
+from lxml import etree
+def pachong(url):
+    url = url
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0"
+    }
+    resp = requests.get(url=url, headers=headers)
+    html_doc = resp.content.decode('utf-8')
+    html = etree.HTML(html_doc)
+    dongmantitle = html.xpath("//div[@class='u-ct']/p[@class='u-tt']/text()")
+    pic = html.xpath("//div[@class='lst']/a/img/@src")
+    print(dongmantitle+pic)
+    pass
+def find_next_page(url):
+    url= url
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:99.0) Gecko/20100101 Firefox/99.0"
+    }
+    resp =requests.get(url= url,headers= headers)
+    html_doc = resp.content.decode('utf-8')
+    html= etree.HTML(html_doc)
+    next_page= html.xpath("//a[contains(text(),'下一页')]/@href")
+    print(next_page)
+    site= "http://www.4399dmw.com"+next_page[0]
+    return site
+    pass
+def main():
+    url= "http://www.4399dmw.com/search/dh-1-0-0-0-0-0-0/"
+    while True:
+        try:
+            pachong(url)
+            url =find_next_page(url)
+            print(url)
+        except:
+            break
+    print('我已经爬好了')
+if __name__ =='__main__':
+   main()
