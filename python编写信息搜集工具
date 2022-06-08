@@ -1,71 +1,51 @@
-根据域名获取ip
-
-import socket
-#ip=socket.getaddrinfo('baidu.com',8080) #该方法需要域名和端口两个参数
-ip=socket.gethostbyname('baidu.com')#根据域名获取服务器ip
-print(ip)
-
-判断网站是否使用了cdn技术
-
-（使用了cdn技术的话，ping的ip可能不是服务器的真实ip）
-
+from http import server
 import os
-import time
-def pd_cdn(ym):
- q1=os.popen(f'nslookup {ym}')
- q2=q1.read()#刚刚q2没有数值，一番调试后发现，返回的q1的object数据只能被read一次，前面read了，后面就read不了了
- q3=q2.count('.')#通过计算返回数据中点的数量来判断返回了几条ip地址
- if q3>10:
-     print(f'{ym}使用了cdn技术')
- else:
-     print(f'{ym}没有使用cdn技术')
-pd_cdn('www.baidu.com')
-
-子域名收集
-
-通过字典添加域名前缀，然后调用系统命令去ping，能ping通则说明该域名存在
-
 import socket
-def domain_scaner(ym,dic):#domain是域名的意思,传入的第一个参数是主域名，第二个参数是字典路径，都是字符串格式
-for ymqz in open(dic):
-    ymqz=ymqz.replace('\n','')#replace是对字符串操作的方法，作用是替换字符串中的特定字符
-    url=ymqz+'.'+ym#但是发现前缀和主域名拼接后不在同一行，因为读取了dic.txt中的换行符，所以需要做一些小修改
-    try:
-        ip=socket.gethostbyname(url)#通过域名去查询ip,域名存在就会返回结果
-        jg=ip+'|'+url
-        print(jg+'\n')
-    except Exception as e:
-        pass
-
-端口扫描
-def scan(ip, port):
-    server = telnetlib.Telnet()      # 创建一个Telnet对象
-    try:
-        title = "开放"
-        server.open(ip,port)         # 利用Telnet对象的open方法来创建TCP连接测试端口是否开放
-        a='{0}:{1}端口'.format(ip, port)
-        write([a,title])
-        print(a,title)
-    except Exception as e:
-         title = "关闭"
-         b = '{0}:{1}端口'.format(ip,port)
-         write([b, title])
-         print(b,title)
-    finally:
-         server.close()
-#portlist = [80,443]
-starttime = time.time()
-threads = []
-for port in portlist:
-    t = threading.Thread(target=scan,args=(ip,port))  #创建线程 args输入ip,port方法
-    t.start()
-    threads.append(t)
-for t in threads:
-    t.join()
-endtime = time.time()
-print('一共运行了{0}秒'.format((endtime-starttime))) 作者：安卓逆向安全 https://www.bilibili.com/read/cv6850535/ 出处：bilibili
-
-whois信息查询
-
-import whois
-q1=whois.whois('xxxxx')[注意不要写入www]
+import time
+'''
+#根据域名获取ip
+import socket
+ip=socket.gethostbyname('baidu.com')
+print(ip)
+'''
+'''
+#判断是否存在cdn
+def judge_cdn(TLDs):
+    r1=os.popen(f'nslookup {TLDs}')
+    r2=r1.read()
+    r3=r2.count('.')
+    if r3>9:
+        print(f"{TLDs} use cdn")
+    else:
+        print(f'{TLDs} is not using cdn')
+judge_cdn('www.baidu.com')
+'''
+'''
+#子域名挖掘
+def domain_scanner(TLDs):
+    url=TLDs.replace('www','')
+    for domain_data in open("TLDs.txt"):#括号内内容为爆破子域名的字典
+        domain_data=domain_data.replace('\n','')
+        domain_url=domain_data + '.' + url
+        try:
+            ip=socket.gethostbyname(domain_url)
+            print(domain_url + '\t\t->\t' +ip)
+            time.sleep(0.1)
+        except Exception as e:
+                pass
+domain_scanner('baidu.com')
+'''
+'''
+#端口扫描
+def scan_for_port(url):
+ ip=socket.gethostbyname(url)
+ ports={'21','22','23','24','110','135','80','8080''8888','7000','7001','3389','443','3306','1433'}
+ server=socket.socket(socket.AF_INET,socket.SOCK_STREAM)
+ for port in ports:
+    data_ip=server.connect_ex((ip,int(port)))
+    if data_ip==0:
+        print(ip+':'+port+ 'is open')
+    else:
+        print(ip + ":" +port + 'is closed')
+scan_for_port(url=input())
+'''
