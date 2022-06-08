@@ -49,3 +49,32 @@ def scan_for_port(url):
         print(ip + ":" +port + 'is closed')
 scan_for_port(url=input())
 '''
+'''
+#whois查询
+def whois_search(url):
+    a1=whois(url)
+    print(a1)
+whois_search('www.baidu.com')
+'''
+'''
+nmap扫描开放端口(多线程)
+def scan_port(host,port):
+ sk=socket.socket()
+ sk.settimeout(0.5)
+ conn_result=sk.connect_ex((host,port))
+ if conn_result==0:
+    print(f'服务器{host}的{port}端口处于开放状态')
+    sk.close()
+start_time=time.time()
+host=input('please input the ip address')
+thread_list=[]
+for port in range(1,65536):
+    t= threading.Thread(target=scan_port,args=(host,port))
+    thread_list.append(t)
+for thread in thread_list:
+    thread.start()
+for thread in  thread_list:
+    thread.join()
+end_time=time.time()
+print(f'耗时：{end_time-start_time}')
+'''
